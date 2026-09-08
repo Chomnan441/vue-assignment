@@ -1,36 +1,44 @@
 <template>
-  <div class="course-list">
-    <div class="course-card">
-      <h3>ชื่อคอร์ส: ...</h3>
-      <p>ราคา: ... บาท</p>
-      <button>เพิ่มในรายการโปรด</button>
+  <article class="course-card">
+    <div>
+      <h3>ชื่อคอร์ส: {{ course.title }}</h3>
+      <p>ราคา: {{ course.price }} บาท</p>
     </div>
-  </div>
+    <button :disabled="!store.username" @click="addToFavorite">
+      เพิ่มในรายการโปรด
+    </button>
+  </article>
 </template>
 
 <script setup>
-// TODO: import { useFavoriteStore } แล้วเขียนฟังก์ชันเพิ่มคอร์สลง store
-// TODO: defineProps({ course: Object })
+import { useFavoriteStore } from "../stores/favorite";
+
+const props = defineProps({
+  course: {
+    type: Object,
+    required: true,
+  },
+});
+
+const store = useFavoriteStore();
+
+function addToFavorite() {
+  store.addFavorite(props.course);
+}
 </script>
 
 <style scoped>
-.course-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 600px;
-  margin: auto;
-  padding: 16px;
-}
-
 .course-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fafafa;
   padding: 12px 16px;
+  margin-bottom: 16px;
+  text-align: left;
 }
 
 h3 {
@@ -51,9 +59,19 @@ button {
   padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 button:hover {
   background-color: #2c9c6d;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:disabled:hover {
+  background-color: #ccc;
 }
 </style>
